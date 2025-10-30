@@ -1,7 +1,7 @@
 # agents/coordinator_agent.py
 from .fitness_agent import FitnessAgent
 from .food_agent import FoodAgent
-from calendar_agent import CalendarAgent  # presupunem că ai deja un calendar_agent
+from .calendar_agent import CalendarAgent  # presupunem că ai deja un calendar_agent
 
 class CoordinatorAgent:
     def __init__(self):

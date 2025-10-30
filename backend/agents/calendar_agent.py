@@ -1,40 +1,39 @@
 # agents/calendar_agent.py
+"""CalendarAgent wraps calendar functionality and (optionally) uses a
+GoogleCalendarAdapter if available. The Google adapter is imported
+defensively so the module can be imported even when google packages
+aren't installed (useful for local dev/tests).
+"""
 from .base_agent import BaseAgent
 
-class CalendarAgent(BaseAgent):
-    def schedule(self, workout_plan: str, meal_plan: str):
-        """
-        Creează un calendar zilnic combinând planul de antrenament și planul alimentar.
-        returnează un text structurat sau JSON.
-        """
-        prompt = f"""
-        You are a smart calendar assistant. 
-        Organize the following workout and meal plan into a daily schedule for 7 days.
-        Include time slots for meals and workouts, assuming the user wakes up at 7 AM and sleeps at 11 PM.
-
-        Workout Plan:
-        {workout_plan}
-
-        Meal Plan:
-        {meal_plan}
-
-        Return the schedule in a clear, structured format.
-        """
-        return self.ask(prompt)
-
-
-from .base_agent import BaseAgent
-from ..adapters.google_calendar_adapter import GoogleCalendarAdapter
+# Try to import the Google adapter, but don't fail import if it's missing.
+try:
+    from adapters.google_calendar_adapter import GoogleCalendarAdapter
+except Exception:
+    GoogleCalendarAdapter = None
 
 
 class CalendarAgent(BaseAgent):
     def __init__(self, name="Calendar"):
         super().__init__(name)
-        self.adapter = GoogleCalendarAdapter()
+        # Instantiate adapter if available, otherwise leave as None.
+        if GoogleCalendarAdapter is not None:
+            try:
+                self.adapter = GoogleCalendarAdapter()
+            except Exception:
+                # If adapter initialization fails (missing credentials, libs, etc.), continue without it
+                self.adapter = None
+        else:
+            self.adapter = None
 
     def schedule(self, workout_plan: str, meal_plan: str):
-        # Preia evenimente reale
-        events = self.adapter.get_upcoming_events()
+        # If we have an adapter, ask for upcoming events; otherwise proceed with empty events.
+        events = []
+        if getattr(self, 'adapter', None) is not None:
+            try:
+                events = self.adapter.get_upcoming_events()
+            except Exception:
+                events = []
 
         # Construiește prompt pentru OpenAI
         prompt = f"""
