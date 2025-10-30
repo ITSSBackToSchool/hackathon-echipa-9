@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <title>Calendar — Health Buddy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <style>
+    .page { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+    .toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; gap:1rem; }
+    .btn { padding:.6rem 1rem; border:1px solid #ddd; border-radius:8px; background:#fff; cursor:pointer; }
+    .btn:hover { background:#f3f6fb; }
+    .muted { color:#666; }
+    table { width:100%; border-collapse: collapse; background:#fff; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden; }
+    thead th { text-align:left; background:#f7f9fc; padding:.75rem; border-bottom:1px solid #e5e7eb; }
+    tbody td { padding:.75rem; border-bottom:1px solid #f0f2f5; vertical-align: top; }
+    tbody tr:last-child td { border-bottom:0; }
+    .badge { font-size:.8rem; padding:.15rem .5rem; border-radius:6px; background:#eef2ff; }
+    .loc { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:320px; display:inline-block; }
+    .spinner { padding:1rem; }
+    @media (max-width: 720px) {
+      thead { display:none; }
+      tbody tr { display:block; border-bottom:1px solid #eee; }
+      tbody td { display:block; padding:.5rem 1rem; }
+      tbody td::before { content: attr(data-label) ": "; font-weight:600; color:#555; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🗓️ Calendar</h1>
+    <nav>
+      <a href="/">Acasă</a>
+      <a class="active" href="/calendar">Calendar</a>
+      <a href="/index">Meniu</a>
+      <a href="/fitness">Fitness</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="toolbar">
+      <h2 class="muted">Evenimente (din API-ul /events)</h2>
+      <div>
+        <label class="muted" for="maxResults">max:</label>
+        <input id="maxResults" type="number" min="1" max="200" value="20" style="width:80px;padding:.35rem .5rem;border:1px solid #ccc;border-radius:8px;" />
+        <button id="reload" class="btn">Reîncarcă</button>
+      </div>
+    </div>
+
+    <div id="tableWrap">
+      <div class="spinner muted">Se încarcă…</div>
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+</body>
+</html>

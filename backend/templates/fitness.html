@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fitness — Health Buddy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <style>
+    .page { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+    .grid { display:grid; grid-template-columns: 1fr; gap: 1rem; }
+    .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:1rem; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+    label { font-weight:600; display:block; margin-bottom:.35rem; }
+    input, select, textarea { width:100%; padding:.6rem .7rem; border:1px solid #d1d5db; border-radius:10px; }
+    textarea { min-height: 120px; resize: vertical; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap:1rem; }
+    .actions { display:flex; gap:.6rem; justify-content:flex-end; }
+    .btn { padding:.6rem 1rem; border:1px solid #ddd; border-radius:10px; background:#004aad; color:#fff; cursor:pointer; }
+    .btn.secondary { background:#fff; color:#004aad; border-color:#004aad; }
+    .result { white-space: pre-wrap; line-height:1.45; }
+    .muted { color:#666; }
+    @media (max-width: 768px){ .row{ grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🏋️‍♀️ Fitness</h1>
+    <nav>
+      <a href="/">Acasă</a>
+      <a href="/calendar">Calendar</a>
+      <a href="/food">Food</a>
+      <a class="active" href="/fitness">Fitness</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="grid">
+      <div class="card">
+        <h2>Generează plan/antrenamente adaptate programului</h2>
+        <p class="muted">Completează detaliile. Dacă lași „Prompt” gol, vom genera automat un plan pe 7 zile, ținând cont de calendarul tău.</p>
+
+        <div class="row">
+          <div>
+            <label for="goal">Obiectiv</label>
+            <select id="goal">
+              <option value="">— Selectează —</option>
+              <option value="muscle gain">Muscle gain</option>
+              <option value="fat loss">Fat loss</option>
+              <option value="endurance">Endurance</option>
+              <option value="general fitness">General fitness</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="experience">Nivel</label>
+            <select id="experience">
+              <option value="">— Selectează —</option>
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="equipment">Echipament</label>
+            <select id="equipment">
+              <option value="">— Selectează —</option>
+              <option value="gym">Gym</option>
+              <option value="dumbbells">Dumbbells</option>
+              <option value="bodyweight">Bodyweight</option>
+              <option value="bands">Bands</option>
+              <option value="mixed">Mixed</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="injuries">Accidentări / limitări (opțional)</label>
+            <input id="injuries" type="text" placeholder="Ex: durere genunchi; evită impact; fără overhead press" />
+          </div>
+        </div>
+
+        <div>
+          <label for="prompt">Prompt (opțional)</label>
+          <textarea id="prompt" placeholder="Ex: Vreau un plan cu 4 sesiuni/săptămână, 30–45 min, accent pe tren superior."></textarea>
+        </div>
+
+        <div class="actions">
+          <button id="btnClear" class="btn secondary">Reset</button>
+          <button id="btnGenerate" class="btn">Generează</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Rezultat</h3>
+        <div id="result" class="result muted">Nimic generat încă.</div>
+        <div id="badge" class="muted" style="margin-top:.5rem;"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/fitness.js') }}"></script>
+</body>
+</html>

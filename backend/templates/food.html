@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <title>Food — Health Buddy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <style>
+    .page { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+    .grid { display:grid; grid-template-columns: 1fr; gap: 1rem; }
+    .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:1rem; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+    label { font-weight:600; display:block; margin-bottom:.35rem; }
+    input, select, textarea { width:100%; padding:.6rem .7rem; border:1px solid #d1d5db; border-radius:10px; }
+    textarea { min-height: 120px; resize: vertical; }
+    .actions { display:flex; gap:.6rem; justify-content:flex-end; }
+    .btn { padding:.6rem 1rem; border:1px solid #ddd; border-radius:10px; background:#004aad; color:#fff; cursor:pointer; }
+    .btn.secondary { background:#fff; color:#004aad; border-color:#004aad; }
+    .result { white-space: pre-wrap; line-height:1.45; }
+    .muted { color:#666; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🍎 Food</h1>
+    <nav>
+      <a href="/">Acasă</a>
+      <a href="/calendar">Calendar</a>
+      <a class="active" href="/food">Food</a>
+      <a href="/fitness">Fitness</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="grid">
+      <div class="card">
+        <h2>Generează recomandări / plan de mese</h2>
+        <p class="muted">
+          Completează preferința, programul tău și/sau un prompt liber.
+          Dacă lași promptul gol, se va genera automat un plan pe 7 zile.
+        </p>
+
+        <div class="grid">
+          <div>
+            <label for="dietPref">Preferință alimentară (opțional)</label>
+            <select id="dietPref">
+              <option value="">— Selectează (opțional) —</option>
+              <option value="balanced">Balanced</option>
+              <option value="high protein">High protein</option>
+              <option value="low carb">Low carb</option>
+              <option value="vegan">Vegan</option>
+              <option value="vegetarian">Vegetarian</option>
+              <option value="mediterranean">Mediterranean</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="schedule">Programul meu (opțional)</label>
+            <textarea id="schedule" placeholder="Ex: L–V 9–18 la birou; sală L/Mi 19–20; pauză prânz 12:30–13:00; evitat lactate."></textarea>
+          </div>
+
+          <div>
+            <label for="prompt">Prompt (opțional)</label>
+            <textarea id="prompt" placeholder="Ex: Fă-mi un plan pe 3 zile cu ~120 g proteine/zi și idei rapide pentru prânz la birou."></textarea>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btnClear" class="btn secondary">Reset</button>
+          <button id="btnGenerate" class="btn">Generează</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Rezultat</h3>
+        <div id="result" class="result muted">Nimic generat încă.</div>
+      </div>
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/food.js') }}"></script>
+</body>
+</html>
