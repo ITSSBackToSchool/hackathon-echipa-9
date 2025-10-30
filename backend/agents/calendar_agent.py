@@ -21,3 +21,27 @@ class CalendarAgent(BaseAgent):
         Return the schedule in a clear, structured format.
         """
         return self.ask(prompt)
+
+
+from .base_agent import BaseAgent
+from ..adapters.google_calendar_adapter import GoogleCalendarAdapter
+
+
+class CalendarAgent(BaseAgent):
+    def __init__(self, name="Calendar"):
+        super().__init__(name)
+        self.adapter = GoogleCalendarAdapter()
+
+    def schedule(self, workout_plan: str, meal_plan: str):
+        # Preia evenimente reale
+        events = self.adapter.get_upcoming_events()
+
+        # Construiește prompt pentru OpenAI
+        prompt = f"""
+        You are a smart calendar assistant.
+        User's upcoming events: {events}
+        Workout plan: {workout_plan}
+        Meal plan: {meal_plan}
+        Suggest a daily schedule that fits around the existing events.
+        """
+        return self.ask(prompt)
