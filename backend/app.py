@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime, timedelta
 
-# ==== Agenți / Adaptoare ====
 from agents.coordinator_agent import CoordinatorAgent
 
 # importuri opționale (nu crăpăm dacă lipsesc)
