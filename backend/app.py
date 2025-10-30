@@ -44,17 +44,25 @@ def get_events():
     try:
         cal_agent = getattr(coordinator, 'calendar_agent', None)
         if cal_agent is None:
-            return jsonify({"events": []}), 200
+            return jsonify({"events": [], "adapter_present": False, "adapter_error": "no calendar_agent on coordinator"}), 200
 
         adapter = getattr(cal_agent, 'adapter', None)
         # allow optional max_results query param
         max_results = request.args.get('max_results', default=10, type=int)
+        if adapter is None:
+            # If adapter initialization failed earlier, calendar_agent may have stored an attribute with details
+            adapter_error = getattr(cal_agent, '_adapter_init_error', None)
+            return jsonify({"events": [], "adapter_present": False, "adapter_error": str(adapter_error)}), 200
 
-        if adapter is None or not hasattr(adapter, 'get_upcoming_events'):
-            return jsonify({"events": []}), 200
+        if not hasattr(adapter, 'get_upcoming_events'):
+            return jsonify({"events": [], "adapter_present": True, "adapter_error": "adapter missing get_upcoming_events"}), 200
 
-        events = adapter.get_upcoming_events(max_results=max_results)
-        return jsonify({"events": events}), 200
+        try:
+            events = adapter.get_upcoming_events(max_results=max_results)
+            # also include a quick diagnostic flag
+            return jsonify({"events": events, "adapter_present": True, "adapter_error": None}), 200
+        except Exception as e:
+            return jsonify({"events": [], "adapter_present": True, "adapter_error": str(e)}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

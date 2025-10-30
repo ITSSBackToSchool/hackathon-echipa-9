@@ -6,10 +6,12 @@ aren't installed (useful for local dev/tests).
 """
 from .base_agent import BaseAgent
 
-# Try to import the Google adapter, but don't fail import if it's missing.
+# Try to import the real Google adapter. During development you can swap to a mock by
+# editing this line, but the default is the real adapter which will prompt for OAuth
 try:
     from adapters.google_calendar_adapter import GoogleCalendarAdapter
 except Exception:
+    # If import fails (missing google libs), fall back to None so the agent stays importable.
     GoogleCalendarAdapter = None
 
 
@@ -20,11 +22,15 @@ class CalendarAgent(BaseAgent):
         if GoogleCalendarAdapter is not None:
             try:
                 self.adapter = GoogleCalendarAdapter()
-            except Exception:
+                self._adapter_init_error = None
+            except Exception as e:
                 # If adapter initialization fails (missing credentials, libs, etc.), continue without it
                 self.adapter = None
+                # record the initialization error for diagnostics
+                self._adapter_init_error = str(e)
         else:
             self.adapter = None
+            self._adapter_init_error = "GoogleCalendarAdapter not available (google packages may be missing)"
 
     def schedule(self, workout_plan: str, meal_plan: str):
         # If we have an adapter, ask for upcoming events; otherwise proceed with empty events.
