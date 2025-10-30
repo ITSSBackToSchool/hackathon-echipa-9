@@ -1,2 +1,4 @@
 backend/.env
-backend/credentials.json
+**/credentials.json
+**/token.json
+**/__pycache__/
