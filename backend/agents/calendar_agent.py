@@ -36,7 +36,9 @@ class CalendarAgent(BaseAgent):
                 events = []
 
         # Construiește prompt pentru OpenAI
+        print("Events from Google Calendar:", events)
         prompt = f"""
+        First of all include in your response the upcoming events from the user's calendar{events}.
         You are a smart calendar assistant.
         User's upcoming events: {events}
         Workout plan: {workout_plan}

@@ -37,6 +37,27 @@ def create_plan():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+# New endpoint: return upcoming calendar events (if adapter available)
+@app.route("/events", methods=["GET"])
+def get_events():
+    try:
+        cal_agent = getattr(coordinator, 'calendar_agent', None)
+        if cal_agent is None:
+            return jsonify({"events": []}), 200
+
+        adapter = getattr(cal_agent, 'adapter', None)
+        # allow optional max_results query param
+        max_results = request.args.get('max_results', default=10, type=int)
+
+        if adapter is None or not hasattr(adapter, 'get_upcoming_events'):
+            return jsonify({"events": []}), 200
+
+        events = adapter.get_upcoming_events(max_results=max_results)
+        return jsonify({"events": events}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # Rulează serverul
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
