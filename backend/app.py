@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 
 from agents.coordinator_agent import CoordinatorAgent
 
-# importuri opționale (nu crăpăm dacă lipsesc)
 try:
     from adapters.google_calendar_adapter import GoogleCalendarAdapter
 except Exception:
@@ -40,7 +39,6 @@ CORS(app)
 coordinator = CoordinatorAgent()
 
 
-# ========================= Helpers =========================
 _google_adapter_singleton = None
 def resolve_google_adapter():
     """1) din coordinator.calendar_agent.adapter; 2) lazy singleton local."""
